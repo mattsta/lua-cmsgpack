@@ -4,6 +4,8 @@
 
 local cmsgpack = require "cmsgpack"
 
+local unpack = unpack or table.unpack
+
 passed = 0
 failed = 0 
 
