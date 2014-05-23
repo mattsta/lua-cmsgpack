@@ -8,6 +8,7 @@ env:
     - LUA=lua5.1 LUA_SFX=
     - LUA=lua5.2 LUA_SFX=
     - LUA=luajit LUA_SFX=jit
+    - LUA=lua5.3 LUA_SFX=
 
 before_install:
   - bash .travis/setup_lua.sh
