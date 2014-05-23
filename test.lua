@@ -6,6 +6,10 @@ local cmsgpack = require "cmsgpack"
 local ok, cmsgpack_safe = pcall(require, 'cmsgpack.safe')
 if not ok then cmsgpack_safe = nil end
 
+print("------------------------------------")
+print("Lua version: " .. (_G.jit and _G.jit.version or _G._VERSION))
+print("------------------------------------")
+
 local unpack = unpack or table.unpack
 
 passed = 0
