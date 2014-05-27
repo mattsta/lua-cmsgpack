@@ -513,8 +513,10 @@ static int mp_pack(lua_State *L) {
     int i;
     mp_buf *buf;
 
-    if (nargs == 0)
-        return luaL_argerror(L, 0, "MessagePack pack needs input.");
+    if (nargs == 0){
+        lua_pushliteral(L, "");
+        return 1;
+    }
 
     buf = mp_buf_new(L);
     for(i = 1; i <= nargs; i++) {

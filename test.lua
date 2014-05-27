@@ -122,6 +122,10 @@ function test_circular(name,obj)
     end
 end
 
+local function npack(...)
+    return select("#", ...), {...}
+end
+
 function test_stream(mod, name, ...)
     io.write("Stream test '", name, "' ...\n")
     if not mod then
@@ -133,27 +137,31 @@ function test_stream(mod, name, ...)
     for i=1, argc do
         test_circular(name, select(i, ...))
     end
-    local ret = {mod.unpack(mod.pack(unpack({...})))}
+    local n, ret = npack(mod.unpack(mod.pack(unpack({...}))))
+    if n ~= argc then
+        print("  ERRORn:", "number of result not match ", n, argc)
+        failed = failed + 1
+    end
     for i=1, argc do
         local origin = select(i, ...)
         if (type(origin) == "table") then
             for k,v in pairs(origin) do
                 local fail = not compare_objects(v, ret[i][k])
                 if fail then
-                    print("ERRORa:", k, v, " not match ", ret[i][k])
+                    print("  ERRORa:", k, v, " not match ", ret[i][k])
                     failed = failed + 1
                 elseif not fail then
-                    print("ok; matched stream table member")
+                    print("  ok; matched stream table member")
                     passed = passed + 1
                 end
             end
         else
             local fail = not compare_objects(origin, ret[i])
             if fail then
-                print("ERRORc:", origin, " not match ", ret[i])
+                print("  ERRORc:", origin, " not match ", ret[i])
                 failed = failed + 1
             elseif not fail then
-                print("ok; matched individual stream member")
+                print("  ok; matched individual stream member")
                 passed = passed + 1
             end
         end
@@ -355,7 +363,9 @@ test_circular("fix map",{a=5,b=10,c="string"})
 test_circular("positive infinity", math.huge)
 test_circular("negative infinity", -math.huge)
 test_circular("high bits", 0xFFFFFFFF)
+test_circular("high bits", -0x7FFFFFFF)
 test_circular("higher bits", 0xFFFFFFFFFFFFFFFF)
+test_circular("higher bits", -0x7FFFFFFFFFFFFFFF)
 
 -- The following test vectors are taken from the Javascript lib at:
 -- https://github.com/cuzic/MessagePack-JS/blob/master/test/test_pack.html
@@ -416,8 +426,9 @@ test_stream(cmsgpack, "oddities", {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, {0}, {a=64}
 test_stream(cmsgpack_safe, "safe oddities", {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, {0}, {a=64}, math.huge, -math.huge)
 test_stream(cmsgpack, "strange things", nil, {}, {nil}, a, b, b, b, a, a, b, {c = a, d = b})
 test_stream(cmsgpack_safe, "strange things", nil, {}, {nil}, a, b, b, b, a, a, b, {c = a, d = b})
-test_error("pack nothing", function() cmsgpack.pack() end)
-test_noerror("pack nothing safe", function() cmsgpack_safe.pack() end)
+test_stream(cmsgpack, "pack nothing")
+test_stream(cmsgpack_safe, "pack nothing")
+
 test_circular("large object test",
     {A=9483, a=9483, aa=9483, aal=9483, aalii=9483, aam=9483, Aani=9483,
     aardvark=9483, aardwolf=9483, Aaron=9483, Aaronic=9483, Aaronical=9483,
