@@ -17,7 +17,7 @@ before_install:
 install:
   - sudo luarocks make rockspec/lua-cmsgpack-scm-1.rockspec CFLAGS="-O2 -fPIC -ftest-coverage -fprofile-arcs" LIBFLAG="-shared --coverage"
 
-script: 
+script:
   - lua$LUA_SFX test.lua
 
 after_success:

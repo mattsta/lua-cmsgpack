@@ -354,6 +354,8 @@ test_circular("fix array (3)",{1,{},{}})
 test_circular("fix map",{a=5,b=10,c="string"})
 test_circular("positive infinity", math.huge)
 test_circular("negative infinity", -math.huge)
+test_circular("high bits", 0xFFFFFFFF)
+test_circular("higher bits", 0xFFFFFFFFFFFFFFFF)
 
 -- The following test vectors are taken from the Javascript lib at:
 -- https://github.com/cuzic/MessagePack-JS/blob/master/test/test_pack.html

@@ -31,7 +31,7 @@
 #define IS_INT_EQUIVALENT(x) IS_INT_TYPE_EQUIVALENT(x, int)
 
 #if LUA_VERSION_NUM < 503
-    #define lua_pushunsigned(L, n) ((sizeof(lua_Integer) < 64) ? lua_pushnumber(L, n) : lua_pushinteger(L, n))
+    #define lua_pushunsigned(L, n) ((sizeof(lua_Integer) == 4) ? lua_pushnumber(L, n) : lua_pushinteger(L, n))
 #endif
 
 /* =============================================================================
@@ -349,13 +349,13 @@ static void mp_encode_lua_bool(lua_State *L, mp_buf *buf) {
 /* Lua 5.3 has a built in 64-bit integer type */
 static void mp_encode_lua_integer(lua_State *L, mp_buf *buf) {
 #if LUA_VERSION_NUM < 503
-    if(sizeof(lua_Integer) < 64){
+    if (sizeof(lua_Integer) == 4){
         lua_Number i = lua_tonumber(L,-1);
         mp_encode_int(buf, (int64_t)i);
     }
     else
 #endif
-    { // MSVC
+    {
         lua_Integer i = lua_tointeger(L,-1);
         mp_encode_int(buf, (int64_t)i);
     }
