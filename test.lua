@@ -363,8 +363,8 @@ test_circular("fix map",{a=5,b=10,c="string"})
 test_circular("positive infinity", math.huge)
 test_circular("negative infinity", -math.huge)
 test_circular("high bits", 0xFFFFFFFF)
-test_circular("high bits", -0x7FFFFFFF)
 test_circular("higher bits", 0xFFFFFFFFFFFFFFFF)
+test_circular("high bits", -0x7FFFFFFF)
 test_circular("higher bits", -0x7FFFFFFFFFFFFFFF)
 
 -- The following test vectors are taken from the Javascript lib at:
@@ -426,6 +426,8 @@ test_stream(cmsgpack, "oddities", {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, {0}, {a=64}
 test_stream(cmsgpack_safe, "safe oddities", {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, {0}, {a=64}, math.huge, -math.huge)
 test_stream(cmsgpack, "strange things", nil, {}, {nil}, a, b, b, b, a, a, b, {c = a, d = b})
 test_stream(cmsgpack_safe, "strange things", nil, {}, {nil}, a, b, b, b, a, a, b, {c = a, d = b})
+test_error("pack nothing", function() cmsgpack.pack() end)
+test_noerror("pack nothing safe", function() cmsgpack_safe.pack() end)
 test_stream(cmsgpack, "pack nothing")
 test_stream(cmsgpack_safe, "pack nothing")
 
