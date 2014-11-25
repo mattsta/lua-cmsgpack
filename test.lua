@@ -334,6 +334,7 @@ end
 
 test_global()
 test_array()
+test_circular("nothing");
 test_circular("positive fixnum",17);
 test_circular("negative fixnum",-1);
 test_circular("true boolean",true);
